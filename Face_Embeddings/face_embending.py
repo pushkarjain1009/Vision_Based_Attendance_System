@@ -56,4 +56,3 @@ def extract_face(path, embeddings, required_size=(160, 160)):
     f.close()
 
     return
-
