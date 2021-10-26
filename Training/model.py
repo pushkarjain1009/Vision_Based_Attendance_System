@@ -4,7 +4,6 @@ from keras.optimizers import Adam
 import keras
 
 
-
 def Model(input_shape, num_classes):
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=input_shape))
