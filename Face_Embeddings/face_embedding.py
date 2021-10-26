@@ -9,7 +9,7 @@ import os
 
 # extraction of faces
 
-def extract_face(path, embeddings, required_size=(160, 160)):
+def extract_face(path, required_size=(160, 160)):
 
     print("[INFO] quantifying faces...")
     imagePaths = list(paths.list_images(path))
@@ -51,7 +51,7 @@ def extract_face(path, embeddings, required_size=(160, 160)):
 
     # save to output
     data = {"embeddings": knownEmbeddings, "names": knownNames}
-    f = open(embeddings, "wb")
+    f = open('./embeddings.bin', "wb")
     f.write(pickle.dumps(data))
     f.close()
 
