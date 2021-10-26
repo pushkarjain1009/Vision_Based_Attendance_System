@@ -51,7 +51,7 @@ def extract_face(path, required_size=(160, 160)):
 
     # save to output
     data = {"embeddings": knownEmbeddings, "names": knownNames}
-    f = open('./embeddings.bin', "wb")
+    f = open('../face_embedding_models/embeddings.bin', "wb")
     f.write(pickle.dumps(data))
     f.close()
 
