@@ -22,7 +22,6 @@ def get_logger():
     logger.setLevel(logging.INFO)
     return logger
 
-
 def trainKerasModelForFaceRecognition(embeddings):
 
     data = pickle.loads(open(embeddings, "rb").read())
