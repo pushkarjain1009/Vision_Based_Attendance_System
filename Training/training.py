@@ -10,6 +10,18 @@ import pickle
 
 from Training.model import Model
 
+import logging
+
+
+def get_logger():
+    logger = logging.getLogger()
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(asctime)s %(levelname)s \t%(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    return logger
+
 
 def trainKerasModelForFaceRecognition(embeddings):
 
@@ -22,6 +34,7 @@ def trainKerasModelForFaceRecognition(embeddings):
     labels = labels.reshape(-1, 1)
     one_hot_encoder = OneHotEncoder(categorical_features = [0])
     labels = one_hot_encoder.fit_transform(labels).toarray()
+    logger = get_logger()
 
     embeddings = np.array(data["embeddings"])
 
@@ -48,10 +61,10 @@ def trainKerasModelForFaceRecognition(embeddings):
         history['loss'] += his.history['loss']
         history['val_loss'] += his.history['val_loss']
 
-        #self.logger.info(his.history['acc'])
+        logger.info(his.history['acc'])
 
     # write the face recognition model to output
-    model.save(self.args['model'])
-    f = open(self.args["le"], "wb")
+    model.save('../face_embedding_models/model')
+    f = open("../face_embedding_models/le", "wb")
     f.write(pickle.dumps(le))
     f.close()
