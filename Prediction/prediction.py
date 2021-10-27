@@ -34,6 +34,11 @@ def detectFace():
     embeddings = "../face_embedding_models/embeddings.pickle"
     le = "../face_embedding_models/le.pickle"
 
+    data = pickle.loads(open(embeddings, "rb").read())
+    le = pickle.loads(open(le, "rb").read())
+
+    embeddings = np.array(data['embeddings'])
+    labels = le.fit_transform(data['names'])
 
     # Start streaming and recording
     cap = cv2.VideoCapture(0)
