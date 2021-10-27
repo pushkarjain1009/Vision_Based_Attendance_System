@@ -2,7 +2,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import KFold
 # from keras.models import load_model
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 # from softmax import SoftMax
 import numpy as np
 import argparse
