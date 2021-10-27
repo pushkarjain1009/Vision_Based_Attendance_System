@@ -63,7 +63,7 @@ def trainKerasModelForFaceRecognition(embeddings):
         logger.info(his.history['acc'])
 
     # write the face recognition model to output
-    model.save('../face_embedding_models/model')
+    model.save('../face_embedding_models/model.h2')
     f = open("../face_embedding_models/le", "wb")
     f.write(pickle.dumps(le))
     f.close()
