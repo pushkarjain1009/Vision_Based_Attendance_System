@@ -14,6 +14,7 @@ def findCosineDistance(vector1, vector2):
     c = np.dot(vec2.T, vec2)
     return 1 - (a / (np.sqrt(b) * np.sqrt(c)))
 
+
 def CosineSimilarity(test_vec, source_vecs):
 
     cos_dist = 0
