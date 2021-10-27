@@ -22,7 +22,7 @@ def CosineSimilarity(test_vec, source_vecs):
     return cos_dist / len(source_vecs)
 
 
-def detectFace(self):
+def detectFace():
     # Initialize some useful arguments
     cosine_threshold = 0.8
     proba_threshold = 0.85
@@ -76,14 +76,14 @@ def detectFace(self):
                     j = np.argmax(preds)
                     proba = preds[j]
                     # Compare this vector to source class vectors to verify it is actual belong to this class
-                    match_class_idx = (self.labels == j)
+                    match_class_idx = (labels == j)
                     match_class_idx = np.where(match_class_idx)[0]
                     selected_idx = np.random.choice(match_class_idx, comparing_num)
                     compare_embeddings = embeddings[selected_idx]
                     # Calculate cosine similarity
-                    cos_similarity = self.CosineSimilarity(nimg, compare_embeddings)
+                    cos_similarity = CosineSimilarity(nimg, compare_embeddings)
                     if cos_similarity < cosine_threshold and proba > proba_threshold:
-                        name = self.le.classes_[j]
+                        name = le.classes_[j]
                         text = "{}".format(name)
                         print("Recognized: {} <{:.2f}>".format(name, proba * 100))
                     # Start tracking
