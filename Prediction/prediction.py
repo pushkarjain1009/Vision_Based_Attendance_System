@@ -34,6 +34,7 @@ def detectFace():
     embeddings = "../face_embedding_models/embeddings.pickle"
     le = "../face_embedding_models/le.pickle"
 
+
     # Start streaming and recording
     cap = cv2.VideoCapture(0)
     frame_width = int(cap.get(3))
