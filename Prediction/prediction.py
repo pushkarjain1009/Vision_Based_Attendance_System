@@ -6,9 +6,6 @@ import cv2
 import dlib
 
 def findCosineDistance(vector1, vector2):
-    """
-    Calculate cosine distance between two vector
-    """
     vec1 = vector1.flatten()
     vec2 = vector2.flatten()
 
@@ -18,9 +15,7 @@ def findCosineDistance(vector1, vector2):
     return 1 - (a / (np.sqrt(b) * np.sqrt(c)))
 
 def CosineSimilarity(test_vec, source_vecs):
-    """
-    Verify the similarity of one vector to group vectors of one class
-    """
+
     cos_dist = 0
     for source_vec in source_vecs:
         cos_dist += findCosineDistance(test_vec, source_vec)
