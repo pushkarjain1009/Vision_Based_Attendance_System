@@ -5,7 +5,6 @@ from sklearn.model_selection import KFold
 #import matplotlib.pyplot as plt
 # from softmax import SoftMax
 import numpy as np
-import argparse
 import pickle
 
 from Training.model import Model
