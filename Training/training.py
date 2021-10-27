@@ -11,7 +11,6 @@ from Training.model import Model
 
 import logging
 
-
 def get_logger():
     logger = logging.getLogger()
     handler = logging.StreamHandler()
