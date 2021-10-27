@@ -30,7 +30,8 @@ def trainKerasModelForFaceRecognition(embeddings):
     labels = le.fit_transform(data["names"])
     num_classes = len(np.unique(labels))
     labels = labels.reshape(-1, 1)
-    one_hot_encoder = OneHotEncoder(categorical_features = [0])
+    labels = labels.reshape(-1, 1)
+    one_hot_encoder = OneHotEncoder(categorical_features=[0])
     labels = one_hot_encoder.fit_transform(labels).toarray()
     logger = get_logger()
 
