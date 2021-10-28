@@ -1,102 +1,71 @@
-'''import numpy as np
+import sys
+
+from mtcnn.mtcnn import MTCNN
+import numpy as np
 import cv2
 import os
 from datetime import datetime
 
-def collectImagesFromCamera(path):
-    # initialize video stream
-    cap = cv2.VideoCapture(0)
 
-    # Setup some useful var
-    faces = 0
-    frames = 0
-    max_faces = 50
+class TrainingDataCollector:
 
-    if not (os.path.exists(path)):
-        os.makedirs(path)
+    def __init__(self):
 
-    while faces < max_faces:
-        ret, frame = cap.read()
-        frames += 1
+        self.detector = MTCNN()
 
-        dtString = str(datetime.now().microsecond)
+    def collectImagesFromCamera(self, path):
+        # initialize video stream
+        cap = cv2.VideoCapture(0)
 
-        cv2.imwrite(os.path.join(path, "{}.jpg".format(dtString)), faces)
-        print("[INFO] {} Image Captured".format(faces + 1))
-        faces += 1
-        cv2.imshow("Face detection", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # Setup some useful var
+        faces = 0
+        frames = 0
+        max_faces = 50
+        max_bbox = np.zeros(4)
 
-    cap.release()
-    cv2.destroyAllWindows()
-'''
+        if not (os.path.exists(path)):
+            os.makedirs(path)
 
-import cv2
-import os
-from datetime import datetime
+        while faces < max_faces:
+            ret, frame = cap.read()
+            frames += 1
 
-# Load functions
+            dtString = str(datetime.now().microsecond)
+            # Get all faces on current frame
+            bboxes = self.detector.detect_faces(frame)
 
+            if len(bboxes) != 0:
+                # Get only the biggest face
+                max_area = 0
+                for bboxe in bboxes:
+                    bbox = bboxe["box"]
+                    bbox = np.array([bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]])
+                    keypoints = bboxe["keypoints"]
+                    area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
+                    if area > max_area:
+                        max_bbox = bbox
+                        landmarks = keypoints
+                        max_area = area
 
-def face_extractor(img):
-    # Function detects faces and returns the cropped face
-    # If no face detected, it returns the input image
-    face_classifier = cv2.CascadeClassifier(
-        'haarcascade_frontalface_default.xml')
-    faces = face_classifier.detectMultiScale(img, 1.3, 5)
+                max_bbox = max_bbox[0:4]
 
-    if len(faces) == 0:
-        return None
-
-    # Crop all faces found
-    for (x, y, w, h) in faces:
-        cropped_face = img[y:y+h, x:x+w]
-
-    return cropped_face
-
-
-def collectImagesFromCamera(path):
-    # initialize video stream
-    cap = cv2.VideoCapture(0)
-
-    # Load HAAR face classifier
+                # get each of 3 frames
+                if frames % 3 == 0:
+                    # convert to face_preprocess.preprocess input
+                    landmarks = np.array([landmarks["left_eye"][0], landmarks["right_eye"][0], landmarks["nose"][0],
+                                          landmarks["mouth_left"][0], landmarks["mouth_right"][0],
+                                          landmarks["left_eye"][1], landmarks["right_eye"][1], landmarks["nose"][1],
+                                          landmarks["mouth_left"][1], landmarks["mouth_right"][1]])
+                    nimg = landmarks.reshape((2, 5)).T
 
 
-    # Setup some useful var
-    count = 0
-    frames = 0
-    max_faces = 50
+                    cv2.imwrite(os.path.join(self.args["output"], "{}.jpg".format(dtString)), nimg)
+                    cv2.rectangle(frame, (max_bbox[0], max_bbox[1]), (max_bbox[2], max_bbox[3]), (255, 0, 0), 2)
+                    print("[INFO] {} Image Captured".format(faces + 1))
+                    faces += 1
+            cv2.imshow("Face detection", frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
-    if not (os.path.exists(path)):
-        os.makedirs(path)
-
-    # Collect ____ samples of your face from webcam input
-    while True:
-
-        ret, frame = cap.read()
-        if face_extractor(frame) is not None:
-            count += 1
-            face = cv2.resize(face_extractor(frame), (200, 200))
-
-            # Save file in specified directory with unique name
-            # Change between Validation and testion and also change name acc to face
-
-            cv2.imwrite(os.path.join(path, "{}.jpg".format(count)), face)
-
-            # Put count on images and display live count
-            cv2.putText(face, str(count), (50, 50),
-                        cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
-            cv2.imshow('Face Cropper', face)
-
-        else:
-            print("Face not found")
-            pass
-
-    # Change count acc. to no. of samples you need
-        if cv2.waitKey(1) == 13 or count == 1:  # 13 is the Enter Key
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-    print("Collecting Samples Complete")
+        cap.release()
+        cv2.destroyAllWindows()
